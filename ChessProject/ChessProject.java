@@ -3,10 +3,6 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-/*
-	This class can be used as a starting point for creating your Chess game project. The only piece that 
-	has been coded is a white pawn...a lot done, more to do!
-*/
  
 public class ChessProject extends JFrame implements MouseListener, MouseMotionListener {
     JLayeredPane layeredPane;
@@ -279,7 +275,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 /*****************************************************************************************************************************************/
 /* BLACK PAWN ****************************************************************************************************************************/	
 /*****************************************************************************************************************************************/	
-		//Black pawn
 		else if(pieceName.equals("BlackPawn")){
 			if((startY == 6)&&(startX == landingX)&&(((startY-landingY)==1)||(startY-landingY)==2)){
 			//Check if a piece is in the way
@@ -321,9 +316,51 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			validMove = false; 
 		}
 	}
+/*****************************************************************************************************************************************/
+/* KNIGHT ********************************************************************************************************************************/	
+/*****************************************************************************************************************************************/	
+	else if(pieceName.contains("Knight")){ 
+		if(((landingX < 0)||(landingX > 7))||((landingY < 0)||landingY >7)){
+			validMove = false; 
+		}
+		else{ 
+			if(((landingX == startX+1)&&(landingY == startY+2))||((landingX == startX-1)&&(landingY ==startY+2))||((landingX == startX+2)
+			&& (landingY == startY +1))||((landingX == startX-2)&&(landingY == startY+1))||((landingX == startX+1)&& (landingY == startY-2))
+			||((landingX == startX-1)&&(landingY == startY-2))||((landingX == startX+2)&&(landingY == startY-1))||((landingX == startX-2)
+			&&(landingY == startY-1))){
+				if(piecePresent(e.getX(),(e.getY()))){
+					if(pieceName.contains("White")){ 
+						if(checkWhiteOponent(e.getX(),e.getY())){
+							validMove = true; 
+				
+						}
+					else{ 
+						validMove = false; 
+					}
+				}
+				else{ 
+					if(checkBlackOponent(e.getX(), e.getY())){ 
+						validMove = true; 
+					}
+					else{ 
+						validMove = false; 
+					}
+				}
+			}
+			else{ 
+				validMove = true; 
+			}
+		}
+		else{ 
+			validMove = false; 
+		}
+	}
+}
+/*****************************************************************************************************************************************/
+/* END OF PIECE MOVEMENTS ****************************************************************************************************************/	
+/*****************************************************************************************************************************************/	
 
-
-
+//Pawns being changed to queen piece on last row
 		if(!validMove){		
 			int location=0;
 			if(startY ==0){
@@ -392,9 +429,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	
     }
  	
-	/*
-		Main method that gets the ball moving.
-	*/
+	//Main method
     public static void main(String[] args) {
         JFrame frame = new ChessProject();
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
