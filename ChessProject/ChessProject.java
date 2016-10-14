@@ -23,15 +23,16 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
  
     public ChessProject(){
         Dimension boardSize = new Dimension(600, 600);
- 
-        //  Use a Layered Pane for this application
+
         layeredPane = new JLayeredPane();
         getContentPane().add(layeredPane);
         layeredPane.setPreferredSize(boardSize);
         layeredPane.addMouseListener(this);
         layeredPane.addMouseMotionListener(this);
 
-        //Add a chess board to the Layered Pane 
+/*****************************************************************************************************************************************/
+/* CREATE CHESSBOARD*********************************************************************************************************************/	
+/*****************************************************************************************************************************************/
         chessBoard = new JPanel();
         layeredPane.add(chessBoard, JLayeredPane.DEFAULT_LAYER);
         chessBoard.setLayout( new GridLayout(8, 8) );
@@ -49,7 +50,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 square.setBackground( i % 2 == 0 ? Color.gray : Color.white );
         }
  
-        // Setting up the Initial Chess board.
+/*****************************************************************************************************************************************/
+/* PIECE SET UP **************************************************************************************************************************/	
+/*****************************************************************************************************************************************/
 		for(int i=8;i < 16; i++){			
        		pieces = new JLabel( new ImageIcon("WhitePawn.png") );
 			panels = (JPanel)chessBoard.getComponent(i);
@@ -64,10 +67,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		pieces = new JLabel( new ImageIcon("WhiteKnight.png") );
 		panels = (JPanel)chessBoard.getComponent(6);
 	    panels.add(pieces);
-		pieces = new JLabel( new ImageIcon("WhiteBishup.png") );
+		pieces = new JLabel( new ImageIcon("WhiteBishop.png") );
 		panels = (JPanel)chessBoard.getComponent(2);
 	    panels.add(pieces);
-		pieces = new JLabel( new ImageIcon("WhiteBishup.png") );
+		pieces = new JLabel( new ImageIcon("WhiteBishop.png") );
 		panels = (JPanel)chessBoard.getComponent(5);
 	    panels.add(pieces);
 		pieces = new JLabel( new ImageIcon("WhiteKing.png") );
@@ -93,10 +96,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		pieces = new JLabel( new ImageIcon("BlackKnight.png") );
 		panels = (JPanel)chessBoard.getComponent(62);
 	    panels.add(pieces);
-		pieces = new JLabel( new ImageIcon("BlackBishup.png") );
+		pieces = new JLabel( new ImageIcon("BlackBishop.png") );
 		panels = (JPanel)chessBoard.getComponent(58);
 	    panels.add(pieces);
-		pieces = new JLabel( new ImageIcon("BlackBishup.png") );
+		pieces = new JLabel( new ImageIcon("BlackBishop.png") );
 		panels = (JPanel)chessBoard.getComponent(61);
 	    panels.add(pieces);
 		pieces = new JLabel( new ImageIcon("BlackKing.png") );
@@ -110,9 +113,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	    panels.add(pieces);		
     }
 
-	/*
-		This method checks if there is a piece present on a particular square.
-	*/
+/*****************************************************************************************************************************************/
+/* PIECE PRESENT**************************************************************************************************************************/	
+/*****************************************************************************************************************************************/
 	private Boolean piecePresent(int x, int y){
 		Component c = chessBoard.findComponentAt(x, y);
 		if(c instanceof JPanel){
@@ -123,9 +126,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		}
 	}
 	
-	/*
-		This is a method to check if a piece is a Black piece.
-	*/
+/*****************************************************************************************************************************************/
+/* CHECK PIECES BY COLOR *****************************************************************************************************************/	
+/*****************************************************************************************************************************************/
 	private Boolean checkWhiteOponent(int newX, int newY){
 		Boolean oponent;
 		Component c1 = chessBoard.findComponentAt(newX, newY);
@@ -140,9 +143,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		return oponent;
 	}	
 	
-	/*
-		This is a method to check if a piece is a White piece.
-	*/
 	private Boolean checkBlackOponent(int newX, int newY){
 		Boolean oponent;
 		Component c1 = chessBoard.findComponentAt(newX, newY);
@@ -157,10 +157,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		return oponent;
 	}
  
-	/*
-		This method is called when we press the Mouse. So we need to find out what piece we have 
-		selected. We may also not have selected a piece!
-	*/
+/*****************************************************************************************************************************************/
+/* MOUSE CLICK ON PIECE ******************************************************************************************************************/	
+/*****************************************************************************************************************************************/
     public void mousePressed(MouseEvent e){
         chessPiece = null;
         Component c =  chessBoard.findComponentAt(e.getX(), e.getY());
@@ -185,10 +184,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
          chessPiece.setLocation(me.getX() + xAdjustment, me.getY() + yAdjustment);
      }
      
- 	/*
-		This method is used when the Mouse is released...we need to make sure the move was valid before 
-		putting the piece back on the board.
-	*/
+/*****************************************************************************************************************************************/
+/* DROP PIECE ****************************************************************************************************************************/	
+/*****************************************************************************************************************************************/
     public void mouseReleased(MouseEvent e) {
         if(chessPiece == null) return;
  
@@ -357,10 +355,87 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	}
 }
 /*****************************************************************************************************************************************/
+/*BISHOP ********************************************************************************************************************************/	
+/*****************************************************************************************************************************************/
+else if(pieceName.contains("Bishop")){ 
+	Boolean inTheWay = false; 
+	int distance = Math.abs(startX-landingX); 
+	if(((landingX < 0) || (landingX > 7))||((landingY < 0)||(landingY > 7))){
+		validMove = false; 
+	}
+	else{ 
+		validMove = true; 
+		if(Math.abs(startX-landingX)==Math.abs(startY-landingY)){
+			if((startX-landingX < 0)&&(startY-landingY < 0)){ 
+				for(int i=0; i < distance; i++){ 
+					if(piecePresent((initialX+(i*75)), (initialY+(i*75)))){
+						inTheWay = true; 
+					}
+				}
+			}
+			else if((startX-landingX < 0)&&(startY-landingY > 0)){
+				for(int i=0; i < distance; i++){ 
+					if(piecePresent((initialX+(i*75)), (initialY-(i*75)))){
+						inTheWay = true; 
+					}
+				}
+			}
+			
+			else if((startX-landingX > 0)&&(startY-landingY > 0)){ 
+				for(int i=0; i < distance; i++){ 
+					if(piecePresent((initialX-(i*75)), (initialY-(i*75)))){
+						inTheWay = true; 
+					}
+				}
+			}
+			else if((startX-landingX > 0)&&(startY-landingY < 0)){
+				for(int i=0; i < distance; i++){ 
+					if(piecePresent((initialX-(i*75)), (initialY+(i*75)))){
+						inTheWay = true; 
+					}
+				}
+			}
+			
+			if(inTheWay){ 
+				validMove = false; 
+			}
+			
+			else{ 
+				if(piecePresent(e.getX(), (e.getY()))){
+					if(pieceName.contains("White")){ 
+						if(checkWhiteOponent(e.getX(), e.getY())){ 
+							validMove = true; 
+						}
+						else{ 
+							validMove = false; 
+						}
+					}
+					else{ 
+						if(checkBlackOponent(e.getX(), e.getY())){
+							validMove = true; 
+						}
+						else{ 
+							validMove = false; 
+						}
+					}
+				}
+				else{ 
+					validMove = true; 
+				}
+			}
+		}
+		else{ 
+			validMove = false; 
+		}
+	}
+}
+/*****************************************************************************************************************************************/
 /* END OF PIECE MOVEMENTS ****************************************************************************************************************/	
 /*****************************************************************************************************************************************/	
 
-//Pawns being changed to queen piece on last row
+/*****************************************************************************************************************************************/
+/* CHANGE PAWN TO QUEEN ON LAST ROW ******************************************************************************************************/	
+/*****************************************************************************************************************************************/
 		if(!validMove){		
 			int location=0;
 			if(startY ==0){
@@ -429,7 +504,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	
     }
  	
-	//Main method
+/*****************************************************************************************************************************************/
+/* MAIN METHOD ****************************************************************************************************************************/	
+/*****************************************************************************************************************************************/
     public static void main(String[] args) {
         JFrame frame = new ChessProject();
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
