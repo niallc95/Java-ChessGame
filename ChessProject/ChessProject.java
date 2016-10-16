@@ -16,7 +16,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	int initialY;
 	int landingY; 
 	int landingX; 
-	boolean progression;
 	JPanel panels;
 	JLabel pieces;
 	
@@ -130,17 +129,17 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 /* CHECK PIECES BY COLOR *****************************************************************************************************************/	
 /*****************************************************************************************************************************************/
 	private Boolean checkWhiteOpponent(int newX, int newY){
-		Boolean oponent;
+		Boolean opponent;
 		Component c1 = chessBoard.findComponentAt(newX, newY);
 		JLabel awaitingPiece = (JLabel)c1;
 		String tmp1 = awaitingPiece.getIcon().toString();			
 		if(((tmp1.contains("Black")))){
-			oponent = true;
+			opponent = true;
 		}
 		else{
-			oponent = false; 
+			opponent = false; 
 		}		
-		return oponent;
+		return opponent;
 	}	
 	
 	private Boolean checkBlackOpponent(int newX, int newY){
@@ -198,78 +197,54 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		Boolean validMove = false;
 		landingX = e.getX()/75; 
 		landingY = e.getY()/75; 
-		Boolean progression = false; 
+		Boolean progressionB = false; 
+		Boolean progressionW = false; 
 
 		
 /*****************************************************************************************************************************************/
 /* WHITE PAWN ****************************************************************************************************************************/	
 /*****************************************************************************************************************************************/	
-		if(pieceName.equals("WhitePawn")){
-			if(startY == 1)
-			{
-				if((startX == (e.getX()/75))&&((((e.getY()/75)-startY)==1)||((e.getY()/75)-startY)==2))
-				{
-					if((((e.getY()/75)-startY)==2)){
-						if((!piecePresent(e.getX(), (e.getY())))&&(!piecePresent(e.getX(), (e.getY()+75)))){
-							validMove = true;					
-						}
-						else{
-							validMove = false;
-						}							
-					}
-					else{
-						if((!piecePresent(e.getX(), (e.getY()))))
-						{
-							validMove = true;					
-						}	
-						else{
-							validMove = false;
-						}													
-					}
-				}
-				else{
-					validMove = false;					
+	if(pieceName.equals("WhitePawn")){
+			if((startY == 1)&&(startX == landingX)&&(((landingY-startY)==1)||(landingY-startY)==2)){
+			//Check if a piece is in the way
+				if(!piecePresent(e.getX(), e.getY())){ 
+					validMove = true; 
+				}else{ 
+					validMove = false; 
 				}
 			}
-			else{
-				int newY = e.getY()/75;
-				int newX = e.getX()/75;				
-				if((startX-1 >=0)||(startX +1 <=7))
-				{
-					if((piecePresent(e.getX(), (e.getY())))&&((((newX == (startX+1)&&(startX+1<=7)))||((newX == (startX-1))&&(startX-1 >=0)))))
-					{
-						if(checkWhiteOpponent(e.getX(), e.getY())){
-							validMove = true;
-							if(startY == 6){
-								success = true;
-							}						
-						}
-						else{
-							validMove = false;
-						}
+			else if((Math.abs(landingX-startX)==1)&&(((landingY-startY)==1))){
+				if(piecePresent(e.getX(),e.getY())){ 
+					if(checkWhiteOpponent(e.getX(),e.getY())){
+						validMove = true; 
+					if(landingY == 7){ 
+						progressionW = true; 
 					}
-					else{
-						if(!piecePresent(e.getX(), (e.getY()))){
-							if((startX == (e.getX()/75))&&((e.getY()/75)-startY)==1){
-								if(startY == 6){
-									success = true;
-								}
-								validMove = true;
-							}
-							else{
-								validMove = false;
-							}				
-						}
-						else{
-							validMove = false;	
-						}
-					}
+					
+				}else{ 
+					validMove = false; 
 				}
-				else{
-					validMove = false;
-				}				
-			}			
+				}else{ 
+					validMove = false; 
+				}
+			}
+		
+			else if((startY != 1)&&((startX == landingX)&&(((landingY-startY)==1)))){ 
+			//If there is a piece in the way
+			if(!piecePresent(e.getX(),e.getY())){ 
+				validMove = true; 
+				if(landingY == 7){ 
+					progressionW = true;
+				}
+			}
+			else{ 
+				validMove = false; 
+			}
 		}
+		else{ 
+			validMove = false; 
+		}
+	}
 /*****************************************************************************************************************************************/
 /* BLACK PAWN ****************************************************************************************************************************/	
 /*****************************************************************************************************************************************/	
@@ -287,7 +262,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 					if(checkBlackOpponent(e.getX(),e.getY())){
 						validMove = true; 
 					if(landingY == 0){ 
-						progression = true; 
+						progressionB = true; 
 					}
 					
 				}else{ 
@@ -303,7 +278,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			if(!piecePresent(e.getX(),e.getY())){ 
 				validMove = true; 
 				if(landingY == 0){ 
-					progression = true;
+					progressionB = true;
 				}
 			}
 			else{ 
@@ -536,7 +511,8 @@ else if(pieceName.contains("Rook")){
 		    panels.add(pieces);			
 		}
 		else{
-			if(progression){ 
+			//Black pawn 
+			if(progressionB){ 
 				int location = 0 + (e.getX()/75); 
 				if(c instanceof JLabel){
 					Container parent = c.getParent(); 
@@ -547,27 +523,22 @@ else if(pieceName.contains("Rook")){
 					
 				}
 			}
-			else if(success){
+			//White pawn
+			else if(progressionW){
 				int location = 56 + (e.getX()/75);
 				if (c instanceof JLabel){
 	            	Container parent = c.getParent();
 	            	parent.remove(0);
-					pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
+					pieces = new JLabel( new ImageIcon("WhiteQueen.png"));
 					parent = (JPanel)chessBoard.getComponent(location);
 			    	parent.add(pieces);			
-				}
-				else{
-					Container parent = (Container)c;
-	            	pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
-					parent = (JPanel)chessBoard.getComponent(location);
-			    	parent.add(pieces);	            	
 				}
 			}
 			else{
 				if (c instanceof JLabel){
 	            	Container parent = c.getParent();
 	            	parent.remove(0);
-	            	parent.add( chessPiece );
+	            	parent.add(chessPiece);
 	        	}
 	        	else {
 	            	Container parent = (Container)c;
