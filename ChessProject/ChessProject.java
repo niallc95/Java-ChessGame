@@ -405,7 +405,7 @@ else if(pieceName.contains("Bishop")){
 	}
 }
 /*****************************************************************************************************************************************/
-/* ROOK 				  ****************************************************************************************************************/	
+/* ROOK***********************************************************************************************************************************/	
 /*****************************************************************************************************************************************/	
 else if(pieceName.contains("Rook")){ 
 	Boolean inTheWay = false; 
@@ -423,6 +423,121 @@ else if(pieceName.contains("Rook")){
 							break; 
 						}else{ 
 							inTheWay = false; 
+						}
+					}
+				}else{ 
+					for(int i=0; i < xMovement; i++){ 
+						if(piecePresent(initialX+(i*75),e.getY())){
+							inTheWay = true; 
+							break; 
+						}else{ 
+							inTheWay = false; 
+						}
+					}
+				}
+			}else{ 
+				int yMovement = Math.abs(startY-landingY);
+				if(startY-landingY > 0){ 
+					for(int i=0; i < yMovement; i++){
+						if(piecePresent(e.getX(),initialY-(i*75))){
+							inTheWay = true;
+							break; 
+						}else{ 
+							inTheWay = false; 
+						}
+					}
+				}else{ 
+					for(int i=0; i < yMovement; i++){
+						if(piecePresent(e.getX(),initialY+(i*75))){
+							inTheWay = true; 
+							break; 
+						}else{ 
+							inTheWay = false; 
+						}
+					}
+				}
+			}
+			
+			if(inTheWay){ 
+				validMove = false; 
+				
+			}else{ 
+				if(piecePresent(e.getX(), (e.getY()))){
+					if(pieceName.contains("White")){ 
+						if(checkWhiteOpponent(e.getX(), e.getY())){ 
+							validMove = true; 
+						}
+						else{ 
+							validMove = false; 
+						}
+					}
+					else{ 
+						if(checkBlackOpponent(e.getX(), e.getY())){
+							validMove = true; 
+						}
+						else{ 
+							validMove = false; 
+						}
+					}
+				}
+				else{ 
+					validMove = true; 
+				}
+			}
+		}
+		else{ 
+			validMove = false; 
+		}
+	}
+}
+/*****************************************************************************************************************************************/
+/* QUEEN**********************************************************************************************************************************/	
+/*****************************************************************************************************************************************/	
+else if(pieceName.contains("Queen")){ 
+	Boolean inTheWay = false; 
+	int distance = Math.abs(startX-landingX); 
+	if(((landingX < 0) || (landingX > 7))||((landingY < 0)||(landingY > 7))){
+		validMove = false;
+	}
+	else{ 
+		validMove = true; 
+		
+		if(((Math.abs(startX-landingX)!=0)&&(Math.abs(startY-landingY)== 0))||((Math.abs(startX-landingX)==0)&&(Math.abs(landingY-startY)!=0))
+		||Math.abs(startX-landingX)==Math.abs(startY-landingY)){ 
+			
+			if(Math.abs(startX-landingX)!=0){
+				int xMovement = Math.abs(startX-landingX);
+				if(startX-landingX > 0){
+					for(int i=0; i < xMovement;i++){
+						if(piecePresent(initialX-(i*75), e.getY())){
+							inTheWay = true; 
+							break; 
+						}else{ 
+							inTheWay = false; 
+						}
+					}
+				}else if((startX-landingX < 0)&&(startY-landingY > 0)){
+					for(int i=0; i < distance; i++){ 
+						if(piecePresent((initialX+(i*75)), (initialY-(i*75)))){
+							inTheWay = true; 
+						}
+					}
+				}else if((startX-landingX < 0)&&(startY-landingY < 0)){ 
+					for(int i=0; i < distance; i++){ 
+						if(piecePresent((initialX+(i*75)), (initialY+(i*75)))){
+							inTheWay = true; 
+						}
+					}
+				}else if((startX-landingX > 0)&&(startY-landingY > 0)){ 
+					for(int i=0; i < distance; i++){ 
+						if(piecePresent((initialX-(i*75)), (initialY-(i*75)))){
+							inTheWay = true; 
+						}
+					}
+				}else if((startX-landingX > 0)&&(startY-landingY < 0)){
+					for(int i=0; i < distance; i++){ 
+						if(piecePresent((initialX-(i*75)), (initialY+(i*75)))){
+							inTheWay = true; 
 						}
 					}
 				}else{ 
