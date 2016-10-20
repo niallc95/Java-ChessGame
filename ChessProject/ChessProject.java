@@ -16,6 +16,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	int initialY;
 	int landingY; 
 	int landingX; 
+	String turn; 
 	JPanel panels;
 	JLabel pieces;
 	
@@ -44,9 +45,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
  
             int row = (i / 8) % 2;
             if (row == 0)
-                square.setBackground( i % 2 == 0 ? Color.white : Color.gray );
+                square.setBackground( i % 2 == 0 ? Color.gray : Color.red );
             else
-                square.setBackground( i % 2 == 0 ? Color.gray : Color.white );
+                square.setBackground( i % 2 == 0 ? Color.red : Color.gray );
         }
  
 /*****************************************************************************************************************************************/
@@ -136,7 +137,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		if(((tmp1.contains("Black")))){
 			opponent = true;
 			if(((tmp1.contains("King")))){
-				JOptionPane.showMessageDialog(null,"Blacks win!!");
+				JOptionPane.showMessageDialog(null,"Whites win!!");
 				System.exit(0);
 			}
 		}
@@ -154,7 +155,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		if(((tmp1.contains("White")))){
 			opponent = true;
 			if(((tmp1.contains("King")))){
-				JOptionPane.showMessageDialog(null,"Whites win!!");
+				JOptionPane.showMessageDialog(null,"Blacks win!!");
 				System.exit(0);
 			}
 		}
